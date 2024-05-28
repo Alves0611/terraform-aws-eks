@@ -29,6 +29,25 @@ resource "aws_subnet" "this" {
   )
 }
 
+resource "aws_nat_gateway" "this" {
+  count = var.create_nat_gateway && var.nat_gateway_per_az ? length(local.public_subnet_ids) : (var.create_nat_gateway ? 1 : 0)
+
+  allocation_id = aws_eip.this.*.id[count.index]
+  subnet_id     = element(local.public_subnet_ids, count.index)
+  tags = {
+    "Name" = "${local.namespaced_service_name}-nat-gateway"
+  }
+}
+
+resource "aws_eip" "this" {
+  count = var.create_nat_gateway && var.nat_gateway_per_az ? length(local.public_subnet_ids) : (var.create_nat_gateway ? 1 : 0)
+
+  domain = "vpc"
+  tags = {
+    "Name" = "${local.namespaced_service_name}-eip"
+  }
+}
+
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.this.id
 
@@ -44,6 +63,14 @@ resource "aws_route_table" "public" {
 
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.this.id
+
+  dynamic "route" {
+    for_each = var.create_nat_gateway ? [1] : []
+    content {
+      cidr_block = local.internet_cidr_block
+      gateway_id = var.nat_gateway_per_az ? element(aws_nat_gateway.this.*.id, 0) : aws_nat_gateway.this[0].id
+    }
+  }
 
   tags = {
     "Name" = "${local.namespaced_service_name}-private"
