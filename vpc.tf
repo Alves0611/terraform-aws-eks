@@ -24,7 +24,8 @@ resource "aws_subnet" "this" {
     {
       "Name" = "${local.namespaced_service_name}-${each.value.name}"
     },
-    can(regex(".*\\bpublic\\b.*", each.value.name)) ? { "kubernetes.io/role/elb" = "1" } : {}
+    can(regex(".*\\bpublic\\b.*", each.value.name)) ? { "kubernetes.io/role/elb" = "1" } : {},
+    can(regex(".*\\bprivate\\b.*", each.value.name)) ? { "kubernetes.io/role/internal-elb" = "1" } : {}
   )
 }
 
