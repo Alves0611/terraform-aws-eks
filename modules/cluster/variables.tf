@@ -12,3 +12,8 @@ variable "public_subnet_1b" {
   type        = string
   description = "The ID of the public subnet in availability zone 1b"
 }
+
+variable "public_subnet_1c" {
+  type        = string
+  description = "The ID of the public subnet in availability zone 1c"
+}
