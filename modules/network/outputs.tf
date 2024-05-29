@@ -5,12 +5,12 @@ output "vpc_id" {
 
 output "public_subnet_ids" {
   description = "The IDs of the public subnets"
-  value       = local.public_subnet_ids
+  value       = [for subnet in aws_subnet.this : subnet.id if can(regex(".*\\bpublic\\b.*", subnet.tags["Name"]))]
 }
 
 output "private_subnet_ids" {
   description = "The IDs of the private subnets"
-  value       = [for k, v in local.subnets : aws_subnet.this[k].id if !v.public]
+  value       = [for subnet in aws_subnet.this : subnet.id if can(regex(".*\\bprivate\\b.*", subnet.tags["Name"]))]
 }
 
 output "nat_gateway_ids" {
