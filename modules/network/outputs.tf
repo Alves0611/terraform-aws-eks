@@ -5,35 +5,28 @@ output "vpc_id" {
 
 output "public_subnet_ids" {
   description = "The IDs of the public subnets"
-  value       = [for subnet in aws_subnet.this : subnet.id if can(regex(".*\\bpublic\\b.*", subnet.tags["Name"]))]
+  value       = local.public_subnet_ids
 }
 
 output "private_subnet_ids" {
   description = "The IDs of the private subnets"
-  value       = [for subnet in aws_subnet.this : subnet.id if can(regex(".*\\bprivate\\b.*", subnet.tags["Name"]))]
+  value       = [for k, v in local.subnets : aws_subnet.this[k].id if !v.public]
 }
 
 output "nat_gateway_ids" {
   description = "The IDs of the NAT Gateways"
-  value       = var.create_nat_gateway ? aws_nat_gateway.this[*].id : []
+  value       = aws_nat_gateway.this[*].id
 }
+
+output "eip_ids" {
+  description = "The IDs of the Elastic IPs"
+  value       = aws_eip.nat[*].id
+}
+
 
 output "internet_gateway_id" {
   description = "The ID of the Internet Gateway"
   value       = aws_internet_gateway.this.id
 }
 
-output "eip_ids" {
-  description = "The IDs of the Elastic IPs"
-  value       = var.create_nat_gateway ? aws_eip.this[*].id : []
-}
 
-output "public_route_table_id" {
-  description = "The ID of the public route table"
-  value       = aws_route_table.public.id
-}
-
-output "private_route_table_id" {
-  description = "The ID of the private route table"
-  value       = aws_route_table.private.id
-}
