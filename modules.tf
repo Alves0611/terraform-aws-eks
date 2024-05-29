@@ -7,3 +7,11 @@ module "eks_network" {
   create_nat_gateway = false
   nat_gateway_per_az = false
 }
+
+module "eks_cluster" {
+  source       = "./modules/cluster"
+  service_name = var.service_name
+
+  public_subnet_1a = module.eks_network.public_subnet_ids[0]
+  public_subnet_1b = module.eks_network.public_subnet_ids[1]
+}
