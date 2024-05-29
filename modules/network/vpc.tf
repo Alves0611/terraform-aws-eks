@@ -25,7 +25,9 @@ resource "aws_subnet" "this" {
 
   tags = merge(
     {
-      "Name" = "${local.namespaced_service_name}-${each.value.name}"
+      "Name" = "${local.namespaced_service_name}-${each.value.name}",
+      "kubernetes.io/role/elb"          = each.value.public ? "1" : null,
+      "kubernetes.io/role/internal-elb" = each.value.public ? null : "1"
     },
     each.value.tags
   )
