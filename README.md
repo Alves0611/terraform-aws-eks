@@ -28,8 +28,6 @@ No resources.
 |------|-------------|------|---------|:--------:|
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | The region to deploy to | `string` | n/a | yes |
 | <a name="input_cidr_block"></a> [cidr\_block](#input\_cidr\_block) | Networking CIDR block to be used for the VPC | `string` | n/a | yes |
-| <a name="input_create_nat_gateway"></a> [create\_nat\_gateway](#input\_create\_nat\_gateway) | Whether to create NAT Gateway | `bool` | n/a | yes |
-| <a name="input_nat_gateway_per_az"></a> [nat\_gateway\_per\_az](#input\_nat\_gateway\_per\_az) | Whether to create a NAT Gateway in each availability zone | `bool` | n/a | yes |
 | <a name="input_service_name"></a> [service\_name](#input\_service\_name) | The service name identifier | `string` | n/a | yes |
 
 ## Outputs
