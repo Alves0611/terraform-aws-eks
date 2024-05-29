@@ -15,8 +15,7 @@ resource "aws_iam_role" "eks_mng_role" {
     ]
   })
 
-  tags = merge(
-    var.tags,
+  tags = (
     {
       Name = "${var.service_name}-mng-role"
     }
