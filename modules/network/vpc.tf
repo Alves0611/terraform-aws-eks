@@ -18,14 +18,13 @@ resource "aws_subnet" "this" {
   vpc_id                  = aws_vpc.this.id
   cidr_block              = each.value.cidr_block
   availability_zone       = "${data.aws_region.current.name}${each.value.az}"
-  map_public_ip_on_launch = true
+  map_public_ip_on_launch = each.value.public
 
   tags = merge(
     {
       "Name" = "${local.namespaced_service_name}-${each.value.name}"
     },
-    can(regex(".*\\bpublic\\b.*", each.value.name)) ? { "kubernetes.io/role/elb" = "1" } : {},
-    can(regex(".*\\bprivate\\b.*", each.value.name)) ? { "kubernetes.io/role/internal-elb" = "1" } : {}
+    each.value.tags
   )
 }
 
@@ -52,7 +51,7 @@ resource "aws_route_table" "public" {
   vpc_id = aws_vpc.this.id
 
   route {
-    cidr_block = local.internet_cidr_block
+    cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.this.id
   }
 
@@ -67,8 +66,8 @@ resource "aws_route_table" "private" {
   dynamic "route" {
     for_each = var.create_nat_gateway ? [1] : []
     content {
-      cidr_block = local.internet_cidr_block
-      gateway_id = var.nat_gateway_per_az ? element(aws_nat_gateway.this.*.id, 0) : aws_nat_gateway.this[0].id
+      cidr_block     = "0.0.0.0/0"
+      nat_gateway_id = var.nat_gateway_per_az ? element(aws_nat_gateway.this.*.id, 0) : aws_nat_gateway.this[0].id
     }
   }
 
