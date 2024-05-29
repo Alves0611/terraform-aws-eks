@@ -29,16 +29,16 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_public_subnet_1a"></a> [public\_subnet\_1a](#input\_public\_subnet\_1a) | The service name identifier | `string` | n/a | yes |
-| <a name="input_public_subnet_1b"></a> [public\_subnet\_1b](#input\_public\_subnet\_1b) | The service name identifier | `string` | n/a | yes |
-| <a name="input_service_name"></a> [service\_name](#input\_service\_name) | The service name identifier | `string` | n/a | yes |
+| <a name="input_public_subnet_1a"></a> [public\_subnet\_1a](#input\_public\_subnet\_1a) | The ID of the public subnet in availability zone 1a | `string` | n/a | yes |
+| <a name="input_public_subnet_1b"></a> [public\_subnet\_1b](#input\_public\_subnet\_1b) | The ID of the public subnet in availability zone 1b | `string` | n/a | yes |
+| <a name="input_service_name"></a> [service\_name](#input\_service\_name) | The name of the service for which the EKS cluster is being provisioned | `string` | n/a | yes |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| <a name="output_certificate_authority"></a> [certificate\_authority](#output\_certificate\_authority) | n/a |
-| <a name="output_cluster_name"></a> [cluster\_name](#output\_cluster\_name) | n/a |
-| <a name="output_endpoint"></a> [endpoint](#output\_endpoint) | n/a |
-| <a name="output_oidc"></a> [oidc](#output\_oidc) | n/a |
+| <a name="output_certificate_authority"></a> [certificate\_authority](#output\_certificate\_authority) | The certificate authority data for the EKS cluster |
+| <a name="output_cluster_name"></a> [cluster\_name](#output\_cluster\_name) | The name of the EKS cluster |
+| <a name="output_endpoint"></a> [endpoint](#output\_endpoint) | The endpoint for the EKS cluster |
+| <a name="output_oidc"></a> [oidc](#output\_oidc) | The OIDC issuer URL for the EKS cluster |
 <!-- END_TF_DOCS -->
