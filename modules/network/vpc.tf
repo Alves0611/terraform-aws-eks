@@ -1,5 +1,8 @@
 resource "aws_vpc" "this" {
   cidr_block = var.cidr_block
+  enable_dns_support   = true
+  enable_dns_hostnames = true
+
   tags = {
     "Name" = local.namespaced_service_name
   }
@@ -28,22 +31,19 @@ resource "aws_subnet" "this" {
   )
 }
 
-resource "aws_nat_gateway" "this" {
-  count = var.create_nat_gateway && var.nat_gateway_per_az ? length(local.public_subnet_ids) : (var.create_nat_gateway ? 1 : 0)
-
-  allocation_id = aws_eip.this.*.id[count.index]
-  subnet_id     = element(local.public_subnet_ids, count.index)
+resource "aws_eip" "nat" {
+  count = 1 
+  domain   = "vpc"
   tags = {
-    "Name" = "${local.namespaced_service_name}-nat-gateway"
+    "Name" = "${local.namespaced_service_name}-eip"
   }
 }
 
-resource "aws_eip" "this" {
-  count = var.create_nat_gateway && var.nat_gateway_per_az ? length(local.public_subnet_ids) : (var.create_nat_gateway ? 1 : 0)
-
-  domain = "vpc"
+resource "aws_nat_gateway" "this" {
+  allocation_id = aws_eip.nat[0].id
+  subnet_id     = element(local.public_subnet_ids, 0) # Usando a primeira subrede pública
   tags = {
-    "Name" = "${local.namespaced_service_name}-eip"
+    "Name" = "${local.namespaced_service_name}-nat-gateway"
   }
 }
 
@@ -63,12 +63,9 @@ resource "aws_route_table" "public" {
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.this.id
 
-  dynamic "route" {
-    for_each = var.create_nat_gateway ? [1] : []
-    content {
-      cidr_block     = "0.0.0.0/0"
-      nat_gateway_id = var.nat_gateway_per_az ? element(aws_nat_gateway.this.*.id, 0) : aws_nat_gateway.this[0].id
-    }
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.this.id
   }
 
   tags = {
