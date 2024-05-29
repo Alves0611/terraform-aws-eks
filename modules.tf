@@ -12,6 +12,7 @@ module "eks_cluster" {
 
   public_subnet_1a = module.eks_network.public_subnet_ids[0]
   public_subnet_1b = module.eks_network.public_subnet_ids[1]
+  public_subnet_1c = module.eks_network.public_subnet_ids[2]
 }
 
 module "eks_managed_node_group" {
@@ -20,4 +21,5 @@ module "eks_managed_node_group" {
   cluster_name      = module.eks_cluster.cluster_name
   subnet_private_1a = module.eks_network.private_subnet_ids[0]
   subnet_private_1b = module.eks_network.private_subnet_ids[1]
+  subnet_private_1c = module.eks_network.private_subnet_ids[2]
 }
