@@ -12,3 +12,8 @@ output "endpoint" {
   description = "The endpoint for the EKS cluster"
   value       = module.eks_cluster.endpoint
 }
+
+output "cluster_sg" {
+  description = "The security group ID associated with the EKS cluster"
+  value       = module.eks_cluster.cluster_sg
+}
