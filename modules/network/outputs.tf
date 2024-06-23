@@ -29,4 +29,6 @@ output "internet_gateway_id" {
   value       = aws_internet_gateway.this.id
 }
 
-
+output "vpc" {
+  value = aws.vpc.eks_vpc.id
+}
