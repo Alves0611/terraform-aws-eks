@@ -24,9 +24,18 @@ module "eks_managed_node_group" {
   subnet_private_1c = module.eks_network.private_subnet_ids[2]
 }
 
-module "eks_aws_load_balancer_controller" {
-  source       = "./modules/aws-load-balancer-controller"
+module "eks_add_ons" {
+  source       = "./modules/add-ons"
   service_name = var.service_name
   oidc         = module.eks_cluster.oidc
   cluster_name = module.eks_cluster.cluster_name
+}
+
+module "eks_ec2" {
+  source         = "./modules/ec2"
+  service_name   = var.service_name
+  vpc            = module.eks_network.vpc
+  public_subnet  = module.eks_network.public_subnet_ids
+  private_subnet = module.eks_network.private_subnet_ids
+  cluster_sg     = module.eks_cluster.cluster_sg
 }
