@@ -9,12 +9,12 @@ variable "vpc" {
 }
 
 variable "public_subnet" {
-  type        = string
+  type        = list(string)
   description = "Subnet for Bastion Host"
 }
 
 variable "private_subnet" {
-  type        = string
+  type        = list(string)
   description = "Subnet for MongoDB"
 }
 
